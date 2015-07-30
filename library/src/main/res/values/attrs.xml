@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="NestLayout">
+        <!--indicate the view whether the section header-->
+        <attr name="section" format="boolean" />
+    </declare-styleable>
+</resources>
