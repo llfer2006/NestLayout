@@ -1,6 +1,8 @@
 # NestLayout for Android
 Nested scroll section
-This project aims to provide a nest scrolled widget for Android,It was originally based on support-v4 library.    ![Screenshot](https://github.com/llfer2006/NestLayout/blob/master/images/23.gif)
+This project aims to provide a nest scrolled widget for Android,It was originally based on support-v4 library.      
+
+![Screenshot](https://github.com/llfer2006/NestLayout/blob/master/images/23.gif)
 
 ##Feature
  * Support Nest scroll widget
@@ -9,6 +11,8 @@ This project aims to provide a nest scrolled widget for Android,It was originall
       * **RecycleView**
       * **NestScrollView**
       * **NestWebView**    
+
+
 Repository at <https://github.com/llfer2006/NestLayout>.
  
 ##Usage
