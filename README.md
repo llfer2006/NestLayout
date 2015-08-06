@@ -54,4 +54,4 @@ Repository at <https://github.com/llfer2006/NestLayout>.
 ## License
 Copyright (c) 2015 llfer2006@gmail.com
 
-Licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html
+Licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
