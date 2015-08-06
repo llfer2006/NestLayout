@@ -50,3 +50,8 @@ Repository at <https://github.com/llfer2006/NestLayout>.
         android:layout_width="match_parent" android:layout_height="match_parent"/>
 </com.llf.nestlayout.library.NestLayout>
 ```
+
+## License
+Copyright (c) 2015 llfer2006@gmail.com
+
+Licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.htm
