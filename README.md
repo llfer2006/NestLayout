@@ -50,7 +50,14 @@ Repository at <https://github.com/llfer2006/NestLayout>.
         android:layout_width="match_parent" android:layout_height="match_parent"/>
 </com.llf.nestlayout.library.NestLayout>
 ```
-
+##Download
+Add the `NestLayout` dependency to your `build.gradle` file :
+```groovy
+dependencies {
+    compile 'com.libllf:nestlayout:1.0.0'
+    ...
+}
+```
 ## License
 Copyright (c) 2015 llfer2006@gmail.com
 
