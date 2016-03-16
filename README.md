@@ -9,13 +9,15 @@ This project aims to provide a nest scrolled widget for Android,It was originall
  * Support Android version 2.3+
  * Current work width:
       * **RecycleView**
-      * **NestScrollView**
-      * **NestWebView**    
+      * **NestedScrollView**
+      * **NestedWebView**    
 
 
 Repository at <https://github.com/llfer2006/NestLayout>.
  
 ##Usage
+
+#####Note: Not support Fling
 
 ###Layout
 ``` xml
@@ -46,7 +48,7 @@ Repository at <https://github.com/llfer2006/NestLayout>.
     <TextView android:layout_width="match_parent" android:layout_height="48dp"
         android:background="#6600FF00" android:text="WebView" app:section="true"
         android:gravity="center_vertical"/>
-    <com.llf.nestlayout.library.NestWebView android:id="@+id/webview"
+    <com.llf.nestlayout.library.NestedWebView android:id="@+id/webview"
         android:layout_width="match_parent" android:layout_height="match_parent"/>
 </com.llf.nestlayout.library.NestLayout>
 ```

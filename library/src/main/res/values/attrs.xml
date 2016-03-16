@@ -3,5 +3,6 @@
     <declare-styleable name="NestLayout">
         <!--indicate the view whether the section header-->
         <attr name="section" format="boolean" />
+        <attr name="sectionTag" format="string" />
     </declare-styleable>
 </resources>

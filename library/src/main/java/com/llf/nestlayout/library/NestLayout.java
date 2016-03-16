@@ -34,12 +34,20 @@ import android.widget.Scroller;
  */
 public class NestLayout extends ViewGroup implements NestedScrollingParent {
 
+    public interface OnSectionChangedListener {
+        void onSectionChanged(CharSequence old, CharSequence current);
+    }
+
     private Scroller mScroller;
     /**
-     * indicate which is current nested view
+     * indicate which is current nested view,may be not this ViewGroup direct child
      */
     private View mNestedView;
-
+    /**
+     * Section Change Lisnter
+     */
+    private OnSectionChangedListener mSectionChangeListener;
+    private int[] mTmpCoord;
     public NestLayout(Context context) {
         this(context, null);
     }
@@ -51,15 +59,22 @@ public class NestLayout extends ViewGroup implements NestedScrollingParent {
     public NestLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs);
         mScroller = new Scroller(context);
+        mTmpCoord = new int[2];
+    }
+
+    public void setSectionChangeListener(OnSectionChangedListener listener) {
+        mSectionChangeListener = listener;
     }
 
     @Override public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
-        if (nestedScrollAxes != ViewCompat.SCROLL_AXIS_VERTICAL)
+        if (nestedScrollAxes != ViewCompat.SCROLL_AXIS_VERTICAL) {
             return false;
+        }
         return true;
     }
 
     @Override public void onNestedScrollAccepted(View child, View target, int nestedScrollAxes) {
+
     }
 
     @Override public void onStopNestedScroll(View target) {
@@ -71,23 +86,50 @@ public class NestLayout extends ViewGroup implements NestedScrollingParent {
         View child = getChildFromTarget(target);
         //found section view from nested view;
         View section = findSectionView(indexOfChild(child));
+        int dy = 0;
         //whether the section view needs scroll to really position
         if (pY == section.getTop()) {
             return;
         }
+        getLocationOnScreen(mTmpCoord);
+        int parentOffset = mTmpCoord[1];
         if (section.getTop() < pY) {
             View nextSection = findNextSectionView(indexOfChild(section));
-            if (nextSection != null) {
-                section = nextSection;
+            if (nextSection != null && section != nextSection) {
+                nextSection.getLocationOnScreen(mTmpCoord);
+                mTmpCoord[1] -= parentOffset;
+                if (mTmpCoord[1] < getHeight() * 4 / 5) {
+                    performSectionChange(section, nextSection);
+                    dy = mTmpCoord[1];
+                } else {
+                    dy = mTmpCoord[1] - getHeight();
+                }
             }
         } else {
             View preSection = findSectionView(indexOfChild(section) - 1);
-            if (preSection != null)
-                section = preSection;
+            if (preSection != null && section != preSection) {
+                preSection.getLocationOnScreen(mTmpCoord);
+                mTmpCoord[1] -= parentOffset;
+                if (mTmpCoord[1] > getHeight()/5) {
+                    performSectionChange(section, preSection);
+                    dy = mTmpCoord[1] - getHeight();
+                } else {
+                    dy = mTmpCoord[1];
+                }
+            }
         }
-        int dy = section.getTop() - pY;
-        mScroller.startScroll(0, pY, 0, dy);
-        invalidate();
+        if (dy != 0) {
+            mScroller.startScroll(0, pY, 0, dy);
+            invalidate();
+        }
+    }
+
+    protected void performSectionChange(View section, View next) {
+        if (mSectionChangeListener != null) {
+            CharSequence old = ((LayoutParams) section.getLayoutParams()).mSectionTag;
+            CharSequence current = ((LayoutParams) next.getLayoutParams()).mSectionTag;
+            mSectionChangeListener.onSectionChanged(old, current);
+        }
     }
 
     @Override public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
@@ -240,11 +282,13 @@ public class NestLayout extends ViewGroup implements NestedScrollingParent {
 
     public static class LayoutParams extends MarginLayoutParams {
         private boolean mSection;
+        private CharSequence mSectionTag;
 
         public LayoutParams(Context c, AttributeSet attrs) {
             super(c, attrs);
             TypedArray a = c.obtainStyledAttributes(attrs, R.styleable.NestLayout);
             mSection = a.getBoolean(R.styleable.NestLayout_section, false);
+            mSectionTag = a.getText(R.styleable.NestLayout_sectionTag);
             a.recycle();
         }
 
@@ -263,14 +307,24 @@ public class NestLayout extends ViewGroup implements NestedScrollingParent {
         public LayoutParams(LayoutParams p) {
             super(p);
             mSection = p.mSection;
+            mSectionTag = p.mSectionTag;
         }
 
         public boolean isSection() {
             return mSection;
         }
 
+        public CharSequence getSectionTag() {
+            return mSectionTag;
+        }
+
         public void setSection(boolean enable) {
             mSection = enable;
+        }
+
+        public void setSection(boolean enable, String tag) {
+            mSection = enable;
+            mSectionTag = tag;
         }
     }
 }

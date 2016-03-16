@@ -6,15 +6,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
+
+import com.llf.nestlayout.library.NestLayout;
 
 public class MainActivity extends AppCompatActivity {
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        int color = getResources().getColor(R.color.window_ground_ashen);
-//        getWindow().setBackgroundDrawable(new ColorDrawable(color));
-
         WebView webView = (WebView) findViewById(R.id.webview);
         webView.setWebViewClient(new WebViewClient() {
             @Override public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -22,13 +22,22 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-        webView.loadUrl("http://github.com");
+        webView.loadUrl("http://hiapk.com/");
 
         RecyclerView listview = (RecyclerView) findViewById(R.id.listview);
         RecyclerView.Adapter adapter = new SimpleStringAdapter(this,tests);
-        listview.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
-        listview.addItemDecoration(new DividerItemDecoration(this,LinearLayoutManager.VERTICAL));
+        listview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        listview.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         listview.setAdapter(adapter);
+        //WebView无法输入的问题
+        webView.setFocusableInTouchMode(true);
+
+        NestLayout layout = (NestLayout) findViewById(R.id.nestlayout);
+        layout.setSectionChangeListener(new NestLayout.OnSectionChangedListener() {
+            @Override public void onSectionChanged(CharSequence old, CharSequence current) {
+                Toast.makeText(MainActivity.this, "old:"+old+",current:"+current, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     String[] tests = new String[]{
