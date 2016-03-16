@@ -56,7 +56,7 @@ Repository at <https://github.com/llfer2006/NestLayout>.
 Add the `NestLayout` dependency to your `build.gradle` file :
 ```groovy
 dependencies {
-    compile 'com.libllf:nestlayout:1.0.0'
+    compile 'com.libllf:nestlayout:1.1.1'
     ...
 }
 ```

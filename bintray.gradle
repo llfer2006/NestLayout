@@ -1,0 +1,95 @@
+/**
+ * 调用步骤
+ * 1.在buildscript的depencies下加入以下依赖
+ *  classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.0'
+ *  classpath 'com.github.dcendents:android-maven-gradle-plugin:1.3'
+ * 2.在要引用脚本的地方添加 apply from './bintray.gradle'.(最好是在文件未尾加上此句)
+ * 3.在gradle.properties中定义以下变量
+ *  LIBGROUP:组织
+ *  LIBVERSION:lib库版本
+ *  LIBARTIFACT:lib库名称
+ *  LIBSITE:lib库网址
+ *  LIBGIT:lib库git地址
+ * 4.在local.properties定义以下变量
+ *  bintray.user:jcenter账号
+ *  bintray.key:jcenter Apikey
+ *
+ * */
+
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
+
+//define group,version artifact,site,git site,those defined in gradle.properties
+group = LIBGROUP
+version = LIBVERSION
+project.archivesBaseName = LIBARTIFACT
+def siteUrl = LIBSITE
+def gitUrl = LIBGIT
+//define javadoc,javaSource
+//打包javadocjar和javasourcejar
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+//define pom
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
+                name LIBARTIFACT
+                url siteUrl
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'llf'
+                        name 'llfer'
+                        email 'llfer2006@gmail.com'
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
+}
+//upload configure
+bintray {
+    java.util.Properties properties = new Properties()
+    properties.load(rootProject.file('local.properties').newDataInputStream())
+    user = properties.getProperty('bintray.user')
+    key = properties.getProperty('bintray.key')
+    configurations = ['archives']
+    pkg {
+        repo = "maven"
+        name = LIBARTIFACT                // project name in jcenter
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["Apache-2.0"]
+        publish = true
+    }
+}
