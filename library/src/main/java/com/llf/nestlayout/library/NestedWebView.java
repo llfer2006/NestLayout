@@ -19,13 +19,11 @@
 package com.llf.nestlayout.library;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.NestedScrollingChild;
 import android.support.v4.view.NestedScrollingChildHelper;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import android.webkit.WebView;
@@ -95,8 +93,6 @@ public class NestedWebView extends WebView implements NestedScrollingChild {
         return mChildHelper.dispatchNestedPreFling(velocityX, velocityY);
     }
 
-    private static final String TAG = "NestedWebView";
-
     @Override public boolean onTouchEvent(MotionEvent event) {
         if (!isNestedScrollingEnabled())
             return super.onTouchEvent(event);
@@ -130,12 +126,9 @@ public class NestedWebView extends WebView implements NestedScrollingChild {
                     int dx = mLastX - x;
                     int dy = mLastY - y;
                     int oldY = getScrollY();
-                    Log.i(TAG, "PreScroll pre: dy :" + dy + ",lastY:" + mLastY + ",Y:" + y + ",no:" + mNestedOffsetY);
                     if (dispatchNestedPreScroll(0, dy, mScrollConsumed, mScrollOffset)) {
                         dy -= mScrollConsumed[1];
                         mNestedOffsetY += mScrollOffset[1];
-                        Log.i(TAG, "PreScroll consume y:" + mScrollConsumed[1] + ",offset:" + mScrollOffset[1] + ",y:" +
-                                ne.getY());
                     }
 
                     //
@@ -146,9 +139,7 @@ public class NestedWebView extends WebView implements NestedScrollingChild {
                     mLastY = y - mScrollOffset[1];
                     int scrollDelta = getScrollY() - oldY;
                     dy -= scrollDelta;
-                    Log.i(TAG, "Scroll pre oldScrollY:" + oldY + ",cScrollY:" + getScrollY());
                     if (dispatchNestedScroll(0, scrollDelta, 0, dy, mScrollOffset)) {
-                        Log.i(TAG, "Scroll offset:" + mScrollOffset[1]);
                         mNestedOffsetY += mScrollOffset[1];
                         mLastY -= mScrollOffset[1];
                     }
